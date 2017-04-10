@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import KFold
 from sklearn.metrics import roc_curve, auc, accuracy_score, precision_score, recall_score, confusion_matrix
@@ -50,7 +50,7 @@ for train_index, test_index in kf.split(X):
     model.compile(loss='binary_crossentropy', optimizer='adagrad', metrics=['accuracy'])
 
     # Fit the model
-    model.fit(X_train, y_train, epochs=2, batch_size=10, verbose=0)
+    model.fit(X_train, y_train, epochs=1000, batch_size=10, verbose=0)
 
     # Evaluate the model
     y_pred = model.predict(X_test)
