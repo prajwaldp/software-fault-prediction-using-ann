@@ -1,7 +1,8 @@
-"""
-Principle Component Analysis:
-Performs Linear dimensionality reduction using Singular Value Decomposition of the data to project it to a lower dimensional space.
-"""
+'''
+Principle Component Analysis: Performs Linear dimensionality reduction
+using Singular Value Decomposition of the data to project it to a lower dimensional space.
+'''
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -13,7 +14,7 @@ from sklearn.decomposition import PCA
 sns.set(color_codes=True)
 
 # Read the dataset into a pandas DataFrame
-df = pd.read_csv('camel-1.6.csv',
+df = pd.read_csv('../data/camel-1.6.csv',
                  usecols=[3, 4, 5, 6, 7, 8, 23],
                  dtype={'wmc': np.float32, 'dit': np.float32,
                         'noc': np.float32, 'cbo': np.float32,

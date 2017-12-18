@@ -1,3 +1,10 @@
+'''
+A Keras Deep Neural Network that trains on the camel 1.6 data-set.
+10-fold cross-validation is used to validate and generalize the model.
+Metrics such as accuracy, precision, recall and ROC AUC are computed for
+choosing the best model.
+'''
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -11,10 +18,10 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import roc_curve, auc, accuracy_score, precision_score, recall_score, confusion_matrix
 
 
-result_log = open('results/log.md', 'w')
+result_file = open('../results/nn-keras.md', 'w')
 
 
-df = pd.read_csv('camel-1.6.csv',
+df = pd.read_csv('../data/camel-1.6.csv',
                  usecols=[3, 4, 5, 6, 7, 8, 23],
                  dtype={'wmc': np.float32, 'dit': np.float32,
                         'noc': np.float32, 'cbo': np.float32,
@@ -35,7 +42,7 @@ for train_index, test_index in kf.split(X):
     X_train, X_test = X[train_index], X[test_index]
     y_train, y_test = y[train_index], y[test_index]
 
-    result_log.write("# FOLD %02d\n" % n_fold)
+    result_file.write("# FOLD %02d\n" % n_fold)
 
     model = Sequential()
     model.add(Dense(50, input_dim=6, activation='relu'))
@@ -66,28 +73,28 @@ for train_index, test_index in kf.split(X):
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic curve')
-    plt.savefig("results/roc/fold_%02d" % n_fold)
+    plt.savefig("../results/roc-nn-keras/fold_%02d" % n_fold)
 
 
-    result_log.write("##### Accuracy : %f\n" % (accuracy_score(y_test, y_pred_classes)))
-    result_log.write("##### Precision : %f\n" % (precision_score(y_test, y_pred_classes)))
-    result_log.write("##### Recall : %f\n" % (recall_score(y_test, y_pred_classes)))
+    result_file.write("##### Accuracy : %f\n" % (accuracy_score(y_test, y_pred_classes)))
+    result_file.write("##### Precision : %f\n" % (precision_score(y_test, y_pred_classes)))
+    result_file.write("##### Recall : %f\n" % (recall_score(y_test, y_pred_classes)))
 
-    result_log.write("### Confusion Matrix\n")
+    result_file.write("### Confusion Matrix\n")
     cm = confusion_matrix(y_test, y_pred_classes, labels=[0, 1])
 
-    result_log.write("|       |    0    |    1    |\n")
-    result_log.write("|-------|---------|---------|\n")
-    result_log.write("|   0   |{:^9}|{:^9}|\n".format(cm[0, 0], cm[0, 1]))
-    result_log.write("|   1   |{:^9}|{:^9}|\n".format(cm[1, 0], cm[1, 1]))
+    result_file.write("|       |    0    |    1    |\n")
+    result_file.write("|-------|---------|---------|\n")
+    result_file.write("|   0   |{:^9}|{:^9}|\n".format(cm[0, 0], cm[0, 1]))
+    result_file.write("|   1   |{:^9}|{:^9}|\n".format(cm[1, 0], cm[1, 1]))
 
-    result_log.write("### ROC Curve\n")
-    result_log.write("![](results/roc/fold_%02d.png)\n" % n_fold)
+    result_file.write("### ROC Curve\n")
+    result_file.write("![](../results/roc-nn-keras/fold_%02d.png)\n" % n_fold)
 
-    result_log.write("##### AUC : %f\n" % roc_auc)
+    result_file.write("##### AUC : %f\n" % roc_auc)
 
 
     n_fold += 1
-    result_log.write("\n---\n\n")
+    result_file.write("\n---\n\n")
 
-result_log.close()
+result_file.close()
